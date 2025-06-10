@@ -14,7 +14,6 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!input.trim()) return;
 
     const newTodo: Todo = {
@@ -24,7 +23,21 @@ export default function Home() {
     };
 
     setTodos([...todos, newTodo]);
-    setInput(""); // پاک کردن input بعد از اضافه‌کردن
+    setInput("");
+  };
+
+  // ✅ toggle: تغییر وضعیت done
+  const toggleTodo = (id: number) => {
+    const updated = todos.map((todo) =>
+      todo.id === id ? { ...todo, done: !todo.done } : todo
+    );
+    setTodos(updated);
+  };
+
+  // ❌ remove: حذف کردن تسک
+  const removeTodo = (id: number) => {
+    const filtered = todos.filter((todo) => todo.id !== id);
+    setTodos(filtered);
   };
 
   return (
@@ -48,9 +61,21 @@ export default function Home() {
       {/* لیست تسک‌ها */}
       <ul className="mt-4">
         {todos.map((todo) => (
-          <li key={todo.id} className="flex justify-between items-center mb-2 border-b pb-2">
-            <span>{todo.text}</span>
-            <span>{todo.done ? "✅" : "⬜"}</span>
+          <li
+            key={todo.id}
+            className={`flex justify-between items-center mb-2 border-b pb-2 ${
+              todo.done ? "text-gray-400 line-through" : ""
+            }`}
+          >
+            <span onClick={() => toggleTodo(todo.id)} className="cursor-pointer">
+              {todo.text}
+            </span>
+            <button
+              onClick={() => removeTodo(todo.id)}
+              className="text-red-500 font-bold ml-4"
+            >
+              ❌
+            </button>
           </li>
         ))}
       </ul>
