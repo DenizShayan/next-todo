@@ -14,6 +14,7 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!input.trim()) return;
 
     const newTodo: Todo = {
