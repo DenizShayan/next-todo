@@ -63,9 +63,8 @@ export default function Home() {
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className={`flex justify-between items-center mb-2 border-b pb-2 ${
-              todo.done ? "text-gray-400 line-through" : ""
-            }`}
+            className={`flex justify-between items-center mb-2 border-b pb-2 ${todo.done ? "text-gray-400 line-through" : ""
+              }`}
           >
             <span onClick={() => toggleTodo(todo.id)} className="cursor-pointer">
               {todo.text}
