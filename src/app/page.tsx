@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// Define the type for a todo item
 type Todo = {
   id: number;
   text: string;
@@ -10,11 +9,22 @@ type Todo = {
 };
 
 export default function Home() {
-  // State for the input field and todo list
   const [input, setInput] = useState<string>('');
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  // Handle form submission to add a new todo
+  // Load todos from localStorage on component mount
+  useEffect(() => {
+    const stored = localStorage.getItem('todos');
+    if (stored) {
+      setTodos(JSON.parse(stored));
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -29,7 +39,6 @@ export default function Home() {
     setInput('');
   };
 
-  // Toggle the done state of a todo
   const toggleTodo = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -38,7 +47,6 @@ export default function Home() {
     );
   };
 
-  // Delete a todo from the list
   const deleteTodo = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
@@ -47,7 +55,6 @@ export default function Home() {
     <main className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Next Todo</h1>
 
-      {/* Form to add new todo */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <input
           value={input}
@@ -63,7 +70,6 @@ export default function Home() {
         </button>
       </form>
 
-      {/* List of todos with numbers */}
       <ul className="space-y-2">
         {todos.map((todo, index) => (
           <li
