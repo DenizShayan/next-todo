@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-// Define the shape of a todo item
+// Define the type for a todo item
 type Todo = {
   id: number;
   text: string;
@@ -10,10 +10,11 @@ type Todo = {
 };
 
 export default function Home() {
+  // State for the input field and todo list
   const [input, setInput] = useState<string>('');
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  // Add new todo
+  // Handle form submission to add a new todo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -21,14 +22,14 @@ export default function Home() {
     const newTodo: Todo = {
       id: Date.now(),
       text: input.trim(),
-      done: false
+      done: false,
     };
 
     setTodos([...todos, newTodo]);
     setInput('');
   };
 
-  // Toggle done status
+  // Toggle the done state of a todo
   const toggleTodo = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -37,7 +38,7 @@ export default function Home() {
     );
   };
 
-  // Delete a todo
+  // Delete a todo from the list
   const deleteTodo = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
@@ -46,6 +47,7 @@ export default function Home() {
     <main className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Next Todo</h1>
 
+      {/* Form to add new todo */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <input
           value={input}
@@ -61,18 +63,20 @@ export default function Home() {
         </button>
       </form>
 
+      {/* List of todos with numbers */}
       <ul className="space-y-2">
-        {todos.map((todo) => (
+        {todos.map((todo, index) => (
           <li
             key={todo.id}
             className="flex items-center justify-between p-2 border rounded"
           >
             <span
               onClick={() => toggleTodo(todo.id)}
-              className={`cursor-pointer flex-grow ${todo.done ? 'line-through text-gray-400' : ''
-                }`}
+              className={`cursor-pointer flex-grow ${
+                todo.done ? 'line-through text-gray-400' : ''
+              }`}
             >
-              {todo.text}
+              {index + 1}. {todo.text}
             </span>
             <button
               onClick={() => deleteTodo(todo.id)}
