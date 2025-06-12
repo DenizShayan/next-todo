@@ -1,37 +1,34 @@
-'use client';  // ۱. این فایل باید در سمت کلاینت اجرا شود چون از useState استفاده می‌کنیم
+'use client';
 
-import { useState } from 'react';  // ۲. ایمپورت useState برای مدیریت state در کامپوننت
+import { useState } from 'react';
 
-// ۳. تعریف نوع داده Todo
+// Define the shape of a todo item
 type Todo = {
-  id: number;     // شناسه یکتا برای هر تسک
-  text: string;   // متن تسک
-  done: boolean;  // وضعیت انجام شدن تسک
+  id: number;
+  text: string;
+  done: boolean;
 };
 
-export default function Home() {   // ۴. کامپوننت اصلی صفحه
-  // ۵. تعریف state برای متن ورودی و لیست تسک‌ها
-  const [input, setInput] = useState<string>('');  
+export default function Home() {
+  const [input, setInput] = useState<string>('');
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  // ۶. تابع اضافه کردن تسک جدید وقتی فرم ارسال می‌شود
+  // Add new todo
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();           // جلوگیری از رفرش شدن صفحه
-    if (!input.trim()) return;    // اگر ورودی خالی بود کاری نکن
+    e.preventDefault();
+    if (!input.trim()) return;
 
-    // ساختن تسک جدید با id یکتا
     const newTodo: Todo = {
       id: Date.now(),
       text: input.trim(),
       done: false
     };
 
-    // اضافه کردن تسک جدید به آرایه todos
     setTodos([...todos, newTodo]);
-    setInput('');  // پاک کردن ورودی
+    setInput('');
   };
 
-  // ۷. تغییر وضعیت انجام شدن تسک (toggle)
+  // Toggle done status
   const toggleTodo = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -40,17 +37,15 @@ export default function Home() {   // ۴. کامپوننت اصلی صفحه
     );
   };
 
-  // ۸. حذف تسک از لیست
+  // Delete a todo
   const deleteTodo = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  // ۹. JSX بازگشتی برای رندر UI
   return (
     <main className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Next Todo</h1>
 
-      {/* ۱۰. فرم ورودی تسک */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <input
           value={input}
@@ -66,7 +61,6 @@ export default function Home() {   // ۴. کامپوننت اصلی صفحه
         </button>
       </form>
 
-      {/* ۱۱. نمایش لیست تسک‌ها */}
       <ul className="space-y-2">
         {todos.map((todo) => (
           <li
@@ -75,9 +69,8 @@ export default function Home() {   // ۴. کامپوننت اصلی صفحه
           >
             <span
               onClick={() => toggleTodo(todo.id)}
-              className={`cursor-pointer flex-grow ${
-                todo.done ? 'line-through text-gray-400' : ''
-              }`}
+              className={`cursor-pointer flex-grow ${todo.done ? 'line-through text-gray-400' : ''
+                }`}
             >
               {todo.text}
             </span>
