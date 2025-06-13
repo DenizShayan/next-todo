@@ -1,98 +1,123 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 
-type Todo = {
-  id: number;
-  text: string;
-  done: boolean;
-};
+type Task = {
+  id: number
+  title: string
+  completed: boolean
+}
 
-export default function Home() {
-  const [input, setInput] = useState<string>('');
-  const [todos, setTodos] = useState<Todo[]>([]);
+export default function Page() {
+  const [task, setTask] = useState<string>("")
+  const [tasks, setTasks] = useState<Task[]>([])
 
-  // Load todos from localStorage on component mount
+  // Load tasks from localStorage on first render
   useEffect(() => {
-    const stored = localStorage.getItem('todos');
-    if (stored) {
-      setTodos(JSON.parse(stored));
+    const savedTasks = localStorage.getItem("tasks")
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks))
     }
-  }, []);
+  }, [])
 
-
-  // Save todos to localStorage whenever they change
+  // Save tasks to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+  }, [tasks])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const newTodo: Todo = {
+  // Add new task
+  const handleAddTask = () => {
+    if (!task.trim()) return
+    const newTask: Task = {
       id: Date.now(),
-      text: input.trim(),
-      done: false,
-    };
+      title: task,
+      completed: false,
+    }
+    setTasks([...tasks, newTask])
+    setTask("")
+  }
 
-    setTodos([...todos, newTodo]);
-    setInput('');
-  };
+  // Toggle task completion
+  const toggleTask = (id: number) => {
+    const updatedTasks = tasks.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    )
+    setTasks(updatedTasks)
+  }
 
-  const toggleTodo = (id: number) => {
-    setTodos((prev) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, done: !todo.done } : todo
-      )
-    );
-  };
+  // Delete a task
+  const deleteTask = (id: number) => {
+    const filteredTasks = tasks.filter(task => task.id !== id)
+    setTasks(filteredTasks)
+  }
 
-  const deleteTodo = (id: number) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
-  };
+  // Clear all tasks
+  const clearAllTasks = () => {
+    if (confirm("Are you sure you want to delete all tasks?")) {
+      setTasks([])
+    }
+  }
 
   return (
-    <main className="p-4 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Next Todo</h1>
+    <main className="max-w-md mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">ToDo List</h1>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4">
         <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Add a new task..."
-          className="border p-2 flex-grow rounded"
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Enter a new task..."
+          className="flex-grow p-2 border rounded"
         />
         <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={handleAddTask}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           Add
         </button>
-      </form>
+      </div>
 
-      <ul className="space-y-2">
-        {todos.map((todo, index) => (
-          <li
-            key={todo.id}
-            className="flex items-center justify-between p-2 border rounded"
-          >
-            <span
-              onClick={() => toggleTodo(todo.id)}
-              className={`cursor-pointer flex-grow ${todo.done ? 'line-through text-gray-400' : ''
-                }`}
-            >
-              {index + 1}. {todo.text}
-            </span>
+      {tasks.length > 0 && (
+        <>
+          <ul className="space-y-2 mb-4">
+            {tasks.map((task, index) => (
+              <li
+                key={task.id}
+                className="flex items-center justify-between border p-2 rounded"
+              >
+                <span
+                  onClick={() => toggleTask(task.id)}
+                  className={`flex-grow cursor-pointer ${task.completed ? "line-through text-gray-500" : ""
+                    }`}
+                >
+                  {index + 1}. {task.title}
+                </span>
+                <button
+                  onClick={() => deleteTask(task.id)}
+                  className="ml-2 text-red-500 hover:text-red-700"
+                >
+                  ❌
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex justify-between items-center text-sm text-gray-600">
+            <span>{tasks.length} task{tasks.length > 1 && "s"} total</span>
             <button
-              onClick={() => deleteTodo(todo.id)}
-              className="text-red-500 hover:text-red-700 ml-4"
+              onClick={clearAllTasks}
+              className="text-red-600 hover:underline"
             >
-              Delete
+              Clear all
             </button>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </>
+      )}
+
+      {tasks.length === 0 && (
+        <p className="text-gray-500">No tasks yet. Add one!</p>
+      )}
     </main>
-  );
+  )
 }
