@@ -20,6 +20,7 @@ export default function Home() {
     }
   }, []);
 
+
   // Save todos to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -78,9 +79,8 @@ export default function Home() {
           >
             <span
               onClick={() => toggleTodo(todo.id)}
-              className={`cursor-pointer flex-grow ${
-                todo.done ? 'line-through text-gray-400' : ''
-              }`}
+              className={`cursor-pointer flex-grow ${todo.done ? 'line-through text-gray-400' : ''
+                }`}
             >
               {index + 1}. {todo.text}
             </span>
