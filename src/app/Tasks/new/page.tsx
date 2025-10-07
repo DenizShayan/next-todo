@@ -4,10 +4,13 @@ import { useState } from "react";
 export default function TaskForm() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [tasks, setTasks] = useState<{ title: string; description: string }[]>([]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log({ title, description });
+        if(!title) return;
+        const newTask = { title, description };
+        setTasks([...tasks, newTask]);
         setTitle("");
         setDescription("");
     };
