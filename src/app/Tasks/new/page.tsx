@@ -16,24 +16,35 @@ export default function TaskForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-6 max-w-md mx-auto flex flex-col gap-4">
-            <input
-                type="text"
-                placeholder="Task Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="border p-2 rounded"
-            />
-            <textarea
-                placeholder="Task Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="border p-2 rounded"
-                rows={4}
-            />
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Add Task
-            </button>
-        </form>
+        <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <input
+                    type="text"
+                    placeholder="Task Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="border p-2 rounded"
+                />
+                <textarea
+                    placeholder="Task description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="border p-2 rounded"
+                    rows={4}
+                />
+                <button 
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Add Task
+                </button>
+            </form>
+            <ul className="flex flex-col gap-3">
+                {tasks.map((task, index)=>(
+                    <li key={index} className="border p-4 rounded">
+                        <h3 className="font-bold">{task.title}</h3>
+                        <p>{task.description}</p>
+                    </li>
+                ))}
     );
 }
