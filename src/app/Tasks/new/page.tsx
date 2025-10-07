@@ -8,7 +8,7 @@ export default function TaskForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if(!title) return;
+        if (!title) return;
         const newTask = { title, description };
         setTasks([...tasks, newTask]);
         setTitle("");
@@ -32,19 +32,19 @@ export default function TaskForm() {
                     className="border p-2 rounded"
                     rows={4}
                 />
-                <button 
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  >
+                <button
+                    type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">                  >
                     Add Task
                 </button>
             </form>
             <ul className="flex flex-col gap-3">
-                {tasks.map((task, index)=>(
-                    <li key={index} className="border p-4 rounded">
-                        <h3 className="font-bold">{task.title}</h3>
+                {tasks.map((task, index) => (
+                    <li key={index} className="border p-3 rounded shadow-sm">
+                        <h2 className="font-bold">{task.title}</h2>
                         <p>{task.description}</p>
                     </li>
                 ))}
+            </ul>
+        </div>
     );
 }
